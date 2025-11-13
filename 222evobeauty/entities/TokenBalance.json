@@ -1,0 +1,262 @@
+{
+  "name": "TokenBalance",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Primary user identifier",
+      "unique": true,
+      "index": true
+    },
+    "wallet_address": {
+      "type": "string",
+      "description": "Polygon wallet address (ERC-20 compatible)",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "index": true
+    },
+    "balances": {
+      "type": "object",
+      "properties": {
+        "available": {
+          "type": "number",
+          "default": 0,
+          "description": "Spendable $BOT (not locked in active bets)"
+        },
+        "locked": {
+          "type": "number",
+          "default": 0,
+          "description": "$BOT locked in pending bets"
+        },
+        "total": {
+          "type": "number",
+          "default": 0,
+          "description": "Total $BOT (available + locked)"
+        },
+        "pending_deposits": {
+          "type": "number",
+          "default": 0,
+          "description": "Deposits awaiting confirmation"
+        },
+        "pending_withdrawals": {
+          "type": "number",
+          "default": 0,
+          "description": "Withdrawals being processed"
+        }
+      },
+      "description": "Multi-state balance tracking (Binance-style)"
+    },
+    "lifetime_stats": {
+      "type": "object",
+      "properties": {
+        "total_deposited": {
+          "type": "number",
+          "default": 0,
+          "description": "Cumulative deposits (all-time)"
+        },
+        "total_withdrawn": {
+          "type": "number",
+          "default": 0,
+          "description": "Cumulative withdrawals (all-time)"
+        },
+        "total_won": {
+          "type": "number",
+          "default": 0,
+          "description": "Total betting winnings"
+        },
+        "total_lost": {
+          "type": "number",
+          "default": 0,
+          "description": "Total betting losses"
+        },
+        "net_profit": {
+          "type": "number",
+          "default": 0,
+          "description": "Total won - total lost"
+        },
+        "total_fees_paid": {
+          "type": "number",
+          "default": 0,
+          "description": "Platform fees paid (5% on bets)"
+        }
+      },
+      "description": "Historical financial metrics"
+    },
+    "betting_stats": {
+      "type": "object",
+      "properties": {
+        "total_bets": {
+          "type": "integer",
+          "default": 0,
+          "description": "Lifetime bet count"
+        },
+        "active_bets": {
+          "type": "integer",
+          "default": 0,
+          "description": "Currently pending bets"
+        },
+        "win_rate": {
+          "type": "number",
+          "default": 0,
+          "description": "% of bets won (0-100)"
+        },
+        "avg_bet_size": {
+          "type": "number",
+          "default": 0,
+          "description": "Average $BOT per bet"
+        },
+        "biggest_win": {
+          "type": "number",
+          "default": 0,
+          "description": "Largest single payout"
+        },
+        "longest_streak": {
+          "type": "integer",
+          "default": 0,
+          "description": "Max consecutive wins"
+        },
+        "current_streak": {
+          "type": "integer",
+          "default": 0,
+          "description": "Current win/loss streak"
+        }
+      },
+      "description": "Betting performance analytics"
+    },
+    "tier": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["bronze", "silver", "gold", "platinum", "diamond"],
+          "default": "bronze",
+          "description": "VIP tier based on volume"
+        },
+        "experience_points": {
+          "type": "integer",
+          "default": 0,
+          "description": "XP for gamification"
+        },
+        "next_tier_requirement": {
+          "type": "number",
+          "description": "Volume needed for next tier"
+        },
+        "perks": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Unlocked benefits (e.g., 'fee_discount_10%')"
+        }
+      },
+      "description": "Loyalty program & VIP status"
+    },
+    "blockchain": {
+      "type": "object",
+      "properties": {
+        "chain_id": {
+          "type": "integer",
+          "default": 137,
+          "description": "Polygon mainnet (137)"
+        },
+        "last_on_chain_sync": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last blockchain balance verification"
+        },
+        "on_chain_balance": {
+          "type": "number",
+          "description": "Actual balance from contract call"
+        },
+        "balance_mismatch": {
+          "type": "boolean",
+          "default": false,
+          "description": "DB vs blockchain discrepancy detected"
+        }
+      },
+      "description": "Blockchain integration & sync status"
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "daily_deposit_limit": {
+          "type": "number",
+          "default": 10000,
+          "description": "Max daily deposit ($BOT)"
+        },
+        "daily_withdrawal_limit": {
+          "type": "number",
+          "default": 5000,
+          "description": "Max daily withdrawal ($BOT)"
+        },
+        "max_bet_size": {
+          "type": "number",
+          "default": 1000,
+          "description": "Per-bet limit ($BOT)"
+        },
+        "kyc_verified": {
+          "type": "boolean",
+          "default": false,
+          "description": "Higher limits if verified"
+        }
+      },
+      "description": "Account limits & restrictions"
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "two_factor_enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "2FA for withdrawals"
+        },
+        "withdrawal_whitelist": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Approved withdrawal addresses"
+        },
+        "last_password_change": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "suspicious_activity_flags": {
+          "type": "integer",
+          "default": 0,
+          "description": "Fraud detection counter"
+        }
+      },
+      "description": "Account security settings"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "account_created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Registration timestamp"
+        },
+        "last_login": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_bet": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Most recent bet timestamp"
+        },
+        "referral_code": {
+          "type": "string",
+          "description": "User's unique referral code"
+        },
+        "referred_by": {
+          "type": "string",
+          "description": "Who referred this user"
+        },
+        "language_preference": {
+          "type": "string",
+          "default": "it",
+          "description": "UI language (ISO 639-1)"
+        }
+      },
+      "description": "Account metadata & activity"
+    }
+  },
+  "required": ["user_email"]
+}

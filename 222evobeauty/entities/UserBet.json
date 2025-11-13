@@ -1,0 +1,187 @@
+{
+  "name": "UserBet",
+  "type": "object",
+  "properties": {
+    "market_id": {
+      "type": "string",
+      "description": "Reference to BettingMarket",
+      "index": true
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Bettor identifier",
+      "index": true
+    },
+    "option": {
+      "type": "string",
+      "enum": ["A", "B"],
+      "description": "Selected option"
+    },
+    "bet_type": {
+      "type": "string",
+      "enum": ["back", "lay"],
+      "description": "Back (for) or Lay (against)"
+    },
+    "placement": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "Stake amount in $BOT",
+          "minimum": 1
+        },
+        "odds": {
+          "type": "number",
+          "default": 1.99,
+          "description": "Locked-in odds at placement"
+        },
+        "potential_return": {
+          "type": "number",
+          "description": "Max winnings (amount × odds)"
+        },
+        "fee_deducted": {
+          "type": "number",
+          "default": 0,
+          "description": "Platform fee (5%) taken at placement"
+        },
+        "net_stake": {
+          "type": "number",
+          "description": "Amount after fee (95% of original)"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Exact placement time (ISO 8601)"
+        },
+        "ip_address": {
+          "type": "string",
+          "description": "IP for fraud detection (hashed)"
+        },
+        "device_type": {
+          "type": "string",
+          "enum": ["desktop", "mobile", "tablet"],
+          "description": "Placement device"
+        }
+      },
+      "description": "Bet placement details (immutable)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "processing", "won", "lost", "refunded", "cancelled", "voided"],
+      "default": "pending",
+      "description": "Current bet state"
+    },
+    "settlement": {
+      "type": "object",
+      "properties": {
+        "payout": {
+          "type": "number",
+          "default": 0,
+          "description": "Total amount returned to user"
+        },
+        "profit": {
+          "type": "number",
+          "default": 0,
+          "description": "Net profit/loss (payout - stake)"
+        },
+        "settled_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When bet was settled"
+        },
+        "settlement_method": {
+          "type": "string",
+          "enum": ["auto_market_close", "admin_manual", "early_cashout"],
+          "description": "How bet was resolved"
+        }
+      },
+      "description": "Settlement & payout info"
+    },
+    "cashout": {
+      "type": "object",
+      "properties": {
+        "available": {
+          "type": "boolean",
+          "default": false,
+          "description": "Can user cash out early?"
+        },
+        "current_value": {
+          "type": "number",
+          "description": "Real-time cashout offer"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When cashout value last calculated"
+        }
+      },
+      "description": "Early cashout feature (future)"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "description": "User session for analytics"
+        },
+        "referral_source": {
+          "type": "string",
+          "description": "Where user came from (UTM tracking)"
+        },
+        "is_first_bet": {
+          "type": "boolean",
+          "default": false,
+          "description": "First bet ever by this user?"
+        },
+        "bet_streak": {
+          "type": "integer",
+          "default": 0,
+          "description": "Consecutive bets in this market"
+        }
+      },
+      "description": "Analytics & gamification metadata"
+    },
+    "risk_flags": {
+      "type": "object",
+      "properties": {
+        "unusual_pattern": {
+          "type": "boolean",
+          "default": false,
+          "description": "Flagged by fraud detection"
+        },
+        "requires_review": {
+          "type": "boolean",
+          "default": false,
+          "description": "Manual admin review needed"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Admin notes on risk"
+        }
+      },
+      "description": "Fraud prevention & compliance"
+    },
+    "notifications": {
+      "type": "object",
+      "properties": {
+        "email_sent": {
+          "type": "boolean",
+          "default": false,
+          "description": "Confirmation email sent?"
+        },
+        "push_sent": {
+          "type": "boolean",
+          "default": false,
+          "description": "Push notification sent?"
+        },
+        "settlement_notified": {
+          "type": "boolean",
+          "default": false,
+          "description": "Payout notification sent?"
+        }
+      },
+      "description": "User notification tracking"
+    }
+  },
+  "required": ["market_id", "user_email", "option", "bet_type", "placement"]
+}

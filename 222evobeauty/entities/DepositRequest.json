@@ -1,0 +1,275 @@
+{
+  "name": "DepositRequest",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Requesting user identifier",
+      "index": true
+    },
+    "wallet_address": {
+      "type": "string",
+      "description": "Polygon wallet address (sender/receiver)",
+      "pattern": "^0x[a-fA-F0-9]{40}$"
+    },
+    "request_type": {
+      "type": "string",
+      "enum": ["deposit", "withdrawal", "swap", "swap_reverse", "internal_transfer"],
+      "default": "deposit",
+      "description": "Transaction type"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "processing", "confirming", "approved", "rejected", "failed", "expired", "cancelled"],
+      "default": "pending",
+      "description": "Request lifecycle state",
+      "index": true
+    },
+    "amounts": {
+      "type": "object",
+      "properties": {
+        "requested": {
+          "type": "number",
+          "description": "Original requested amount"
+        },
+        "token_type": {
+          "type": "string",
+          "enum": ["BOT", "USDC", "USDT", "MATIC", "ETH"],
+          "default": "BOT",
+          "description": "Token being deposited/withdrawn"
+        },
+        "bot_equivalent": {
+          "type": "number",
+          "description": "$BOT amount (for swaps)"
+        },
+        "usdc_equivalent": {
+          "type": "number",
+          "description": "USDC amount (for swaps)"
+        },
+        "exchange_rate": {
+          "type": "number",
+          "description": "Locked-in rate at request time"
+        },
+        "fee_amount": {
+          "type": "number",
+          "default": 0,
+          "description": "Platform fee charged (5%)"
+        },
+        "net_amount": {
+          "type": "number",
+          "description": "Amount after fees"
+        },
+        "gas_fee": {
+          "type": "number",
+          "default": 0,
+          "description": "Estimated/actual gas cost (MATIC)"
+        }
+      },
+      "description": "Detailed amount breakdown"
+    },
+    "blockchain": {
+      "type": "object",
+      "properties": {
+        "chain_id": {
+          "type": "integer",
+          "default": 137,
+          "description": "Network: Polygon Mainnet (137)"
+        },
+        "tx_hash": {
+          "type": "string",
+          "description": "Transaction hash",
+          "pattern": "^0x[a-fA-F0-9]{64}$"
+        },
+        "block_number": {
+          "type": "integer",
+          "description": "Block height of confirmation"
+        },
+        "confirmations": {
+          "type": "integer",
+          "default": 0,
+          "description": "Current confirmation count"
+        },
+        "required_confirmations": {
+          "type": "integer",
+          "default": 12,
+          "description": "Confirmations needed for approval"
+        },
+        "explorer_url": {
+          "type": "string",
+          "description": "PolygonScan link"
+        }
+      },
+      "description": "On-chain transaction details"
+    },
+    "timeline": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Request submission timestamp"
+        },
+        "submitted_to_blockchain_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When TX was broadcast"
+        },
+        "confirmed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When TX reached required confirmations"
+        },
+        "approved_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Admin approval timestamp"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Final settlement timestamp"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Auto-reject if not processed by this time"
+        }
+      },
+      "description": "Request lifecycle timestamps"
+    },
+    "approval": {
+      "type": "object",
+      "properties": {
+        "approved_by": {
+          "type": "string",
+          "description": "Admin email who approved"
+        },
+        "approval_method": {
+          "type": "string",
+          "enum": ["manual_admin", "auto_approved", "bot_telegram", "api_webhook"],
+          "description": "How request was approved"
+        },
+        "admin_notes": {
+          "type": "string",
+          "description": "Internal notes"
+        },
+        "rejection_reason": {
+          "type": "string",
+          "description": "Why request was rejected"
+        },
+        "risk_score": {
+          "type": "number",
+          "description": "Fraud detection score (0-100)",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "description": "Approval/rejection metadata"
+    },
+    "kyc_verification": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Does this request need KYC?"
+        },
+        "verified": {
+          "type": "boolean",
+          "default": false,
+          "description": "User KYC status"
+        },
+        "verification_level": {
+          "type": "string",
+          "enum": ["none", "basic", "enhanced", "institutional"],
+          "description": "KYC tier"
+        }
+      },
+      "description": "Compliance & AML checks"
+    },
+    "notifications": {
+      "type": "object",
+      "properties": {
+        "user_notified": {
+          "type": "boolean",
+          "default": false,
+          "description": "User email sent?"
+        },
+        "admin_notified": {
+          "type": "boolean",
+          "default": false,
+          "description": "Admin alert sent?"
+        },
+        "telegram_sent": {
+          "type": "boolean",
+          "default": false,
+          "description": "Telegram bot notification"
+        },
+        "notification_channels": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Where notifications were sent"
+        }
+      },
+      "description": "Notification tracking"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "ip_address": {
+          "type": "string",
+          "description": "Request origin IP (hashed)"
+        },
+        "user_agent": {
+          "type": "string",
+          "description": "Browser/device info"
+        },
+        "session_id": {
+          "type": "string",
+          "description": "User session for fraud detection"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["web", "mobile_app", "api", "telegram_bot"],
+          "description": "Where request originated"
+        },
+        "is_first_deposit": {
+          "type": "boolean",
+          "default": false,
+          "description": "First-time deposit bonus eligible?"
+        },
+        "referrer": {
+          "type": "string",
+          "description": "UTM tracking for growth"
+        }
+      },
+      "description": "Request context & analytics"
+    },
+    "processing": {
+      "type": "object",
+      "properties": {
+        "processed": {
+          "type": "boolean",
+          "default": false,
+          "description": "Transaction completed in DB?"
+        },
+        "processing_attempts": {
+          "type": "integer",
+          "default": 0,
+          "description": "Retry counter"
+        },
+        "last_error": {
+          "type": "string",
+          "description": "Last processing error message"
+        },
+        "retry_after": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When to retry if failed"
+        }
+      },
+      "description": "Processing state & error handling"
+    }
+  },
+  "required": ["user_email", "request_type", "amounts"]
+}

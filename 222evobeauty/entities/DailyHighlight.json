@@ -1,0 +1,138 @@
+{
+  "name": "DailyHighlight",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Publication date (ISO 8601)"
+    },
+    "conversation_id": {
+      "type": "string",
+      "description": "Reference to source conversation"
+    },
+    "slug": {
+      "type": "string",
+      "description": "SEO-friendly URL slug (auto-generated from title)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "diy_beginner",
+        "component_suppliers",
+        "cost_breakdown",
+        "lidar_sensors",
+        "servo_motors",
+        "ai_software",
+        "emotional_ai",
+        "sexual_desirability",
+        "tesla_optimus",
+        "unitree_robots",
+        "realbotix",
+        "meta_ai",
+        "raspberry_pi_projects",
+        "3d_printing",
+        "power_systems",
+        "learning_algorithms",
+        "diy_assembly",
+        "budget_builds",
+        "industry_news",
+        "breakthrough_tech"
+      ],
+      "description": "Innovation category"
+    },
+    "difficulty_level": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced", "expert", "industry"],
+      "description": "Technical complexity"
+    },
+    "title": {
+      "type": "string",
+      "description": "Compelling headline (max 80 chars for social sharing)"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Concise summary (max 200 chars for meta description)"
+    },
+    "impact_score": {
+      "type": "number",
+      "description": "Development acceleration impact (0-100)",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "practical_value": {
+      "type": "number",
+      "description": "Actionability score (0-100)",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "acceleration_days": {
+      "type": "number",
+      "description": "Estimated timeline reduction (days)",
+      "minimum": 0
+    },
+    "user_message": {
+      "type": "string",
+      "description": "Original user prompt"
+    },
+    "ai_response": {
+      "type": "string",
+      "description": "AI-generated answer"
+    },
+    "language": {
+      "type": "string",
+      "description": "Primary language code (ISO 639-1)"
+    },
+    "actionable_steps": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Step-by-step action items"
+    },
+    "tags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Searchable tags for filtering/discovery"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "Featured image for social cards (Open Graph)"
+    },
+    "estimated_cost": {
+      "type": "number",
+      "description": "Budget estimate (USD) if DIY project"
+    },
+    "external_links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {"type": "string"},
+          "url": {"type": "string"},
+          "type": {"type": "string", "enum": ["tutorial", "supplier", "product", "research", "video"]}
+        }
+      },
+      "description": "Curated external resources"
+    },
+    "engagement_metrics": {
+      "type": "object",
+      "properties": {
+        "views": {"type": "integer", "default": 0},
+        "likes": {"type": "integer", "default": 0},
+        "shares": {"type": "integer", "default": 0},
+        "bookmarks": {"type": "integer", "default": 0}
+      },
+      "description": "User interaction analytics"
+    },
+    "is_trending": {
+      "type": "boolean",
+      "default": false,
+      "description": "Featured in trending section"
+    },
+    "is_pinned": {
+      "type": "boolean",
+      "default": false,
+      "description": "Admin pinned to top"
+    }
+  },
+  "required": ["date", "category", "title", "summary", "impact_score"]
+}

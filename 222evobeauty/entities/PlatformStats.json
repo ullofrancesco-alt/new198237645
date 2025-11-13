@@ -1,0 +1,315 @@
+{
+  "name": "PlatformStats",
+  "type": "object",
+  "properties": {
+    "period": {
+      "type": "string",
+      "enum": ["all_time", "yearly", "monthly", "weekly", "daily"],
+      "default": "all_time",
+      "description": "Time period for these stats"
+    },
+    "period_start": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Period start (null for all_time)"
+    },
+    "period_end": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Period end (null for all_time)"
+    },
+    "revenue": {
+      "type": "object",
+      "properties": {
+        "total_commission_earned": {
+          "type": "number",
+          "default": 0,
+          "description": "Total platform fees collected (5% on bets)"
+        },
+        "commission_by_token": {
+          "type": "object",
+          "properties": {
+            "BOT": {"type": "number", "default": 0},
+            "USDC": {"type": "number", "default": 0},
+            "USDT": {"type": "number", "default": 0}
+          },
+          "description": "Fee breakdown by token type"
+        },
+        "avg_commission_per_bet": {
+          "type": "number",
+          "default": 0,
+          "description": "Average fee per bet"
+        },
+        "commission_growth_rate": {
+          "type": "number",
+          "description": "% change vs previous period"
+        }
+      },
+      "description": "Platform revenue metrics"
+    },
+    "betting_activity": {
+      "type": "object",
+      "properties": {
+        "total_bets_placed": {
+          "type": "integer",
+          "default": 0,
+          "description": "Lifetime bet count"
+        },
+        "total_volume": {
+          "type": "number",
+          "default": 0,
+          "description": "Total $BOT wagered (all-time)"
+        },
+        "volume_by_market_type": {
+          "type": "object",
+          "properties": {
+            "daily_prompt": {"type": "number", "default": 0},
+            "weekly_challenge": {"type": "number", "default": 0},
+            "special_event": {"type": "number", "default": 0}
+          },
+          "description": "Volume segmented by market category"
+        },
+        "avg_bet_size": {
+          "type": "number",
+          "default": 0,
+          "description": "Average $BOT per bet"
+        },
+        "back_vs_lay_ratio": {
+          "type": "number",
+          "description": "% of back bets vs lay bets"
+        },
+        "bets_growth_rate": {
+          "type": "number",
+          "description": "% change in bet count vs previous period"
+        }
+      },
+      "description": "Betting volume & activity metrics"
+    },
+    "user_metrics": {
+      "type": "object",
+      "properties": {
+        "total_users": {
+          "type": "integer",
+          "default": 0,
+          "description": "Total registered users"
+        },
+        "active_bettors": {
+          "type": "integer",
+          "default": 0,
+          "description": "Users who placed at least 1 bet in period"
+        },
+        "new_users": {
+          "type": "integer",
+          "default": 0,
+          "description": "New registrations in period"
+        },
+        "dau": {
+          "type": "integer",
+          "description": "Daily Active Users (last 24h)"
+        },
+        "mau": {
+          "type": "integer",
+          "description": "Monthly Active Users (last 30d)"
+        },
+        "retention_rate": {
+          "type": "number",
+          "description": "% users who return after first bet"
+        },
+        "churn_rate": {
+          "type": "number",
+          "description": "% users who became inactive"
+        }
+      },
+      "description": "User growth & engagement"
+    },
+    "market_metrics": {
+      "type": "object",
+      "properties": {
+        "total_markets_created": {
+          "type": "integer",
+          "default": 0,
+          "description": "All-time market count"
+        },
+        "active_markets": {
+          "type": "integer",
+          "default": 0,
+          "description": "Currently open markets"
+        },
+        "resolved_markets": {
+          "type": "integer",
+          "default": 0,
+          "description": "Settled markets"
+        },
+        "avg_liquidity_per_market": {
+          "type": "number",
+          "description": "Average $BOT per market"
+        },
+        "option_a_win_rate": {
+          "type": "number",
+          "description": "% of markets won by Option A (Big Players)"
+        },
+        "option_b_win_rate": {
+          "type": "number",
+          "description": "% of markets won by Option B (Community)"
+        }
+      },
+      "description": "Market creation & outcomes"
+    },
+    "token_economics": {
+      "type": "object",
+      "properties": {
+        "total_bot_in_circulation": {
+          "type": "number",
+          "description": "Total $BOT minted/distributed"
+        },
+        "total_bot_locked_in_bets": {
+          "type": "number",
+          "description": "$BOT currently in active bets"
+        },
+        "total_deposits": {
+          "type": "number",
+          "default": 0,
+          "description": "Cumulative deposits (all tokens)"
+        },
+        "total_withdrawals": {
+          "type": "number",
+          "default": 0,
+          "description": "Cumulative withdrawals"
+        },
+        "net_deposits": {
+          "type": "number",
+          "description": "Deposits - Withdrawals"
+        },
+        "avg_wallet_balance": {
+          "type": "number",
+          "description": "Average $BOT per user wallet"
+        }
+      },
+      "description": "Token supply & flow metrics"
+    },
+    "content_metrics": {
+      "type": "object",
+      "properties": {
+        "total_conversations": {
+          "type": "integer",
+          "default": 0,
+          "description": "All AI conversations"
+        },
+        "total_highlights": {
+          "type": "integer",
+          "default": 0,
+          "description": "Published daily highlights"
+        },
+        "avg_impact_score": {
+          "type": "number",
+          "description": "Average highlight impact score"
+        },
+        "total_acceleration_days": {
+          "type": "number",
+          "description": "Cumulative days saved (timeline metric)"
+        },
+        "conversations_per_day": {
+          "type": "number",
+          "description": "Daily conversation rate"
+        }
+      },
+      "description": "Content generation & quality"
+    },
+    "financial_health": {
+      "type": "object",
+      "properties": {
+        "total_payouts": {
+          "type": "number",
+          "default": 0,
+          "description": "Total winnings paid to users"
+        },
+        "platform_profit": {
+          "type": "number",
+          "description": "Revenue - operational costs"
+        },
+        "profit_margin": {
+          "type": "number",
+          "description": "% profit margin"
+        },
+        "runway_days": {
+          "type": "integer",
+          "description": "Days platform can operate at current burn rate"
+        }
+      },
+      "description": "Business sustainability metrics"
+    },
+    "engagement_metrics": {
+      "type": "object",
+      "properties": {
+        "total_page_views": {
+          "type": "integer",
+          "default": 0,
+          "description": "All-time page views"
+        },
+        "avg_session_duration": {
+          "type": "number",
+          "description": "Average minutes per session"
+        },
+        "bounce_rate": {
+          "type": "number",
+          "description": "% single-page sessions"
+        },
+        "conversion_rate": {
+          "type": "number",
+          "description": "% visitors who place a bet"
+        }
+      },
+      "description": "Web analytics metrics"
+    },
+    "comparative_benchmarks": {
+      "type": "object",
+      "properties": {
+        "vs_last_period": {
+          "type": "object",
+          "properties": {
+            "volume_change": {"type": "number"},
+            "users_change": {"type": "number"},
+            "bets_change": {"type": "number"}
+          },
+          "description": "% changes vs previous period"
+        },
+        "vs_last_year": {
+          "type": "object",
+          "properties": {
+            "volume_change": {"type": "number"},
+            "users_change": {"type": "number"},
+            "bets_change": {"type": "number"}
+          },
+          "description": "Year-over-year growth"
+        }
+      },
+      "description": "Period-over-period comparisons"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "last_updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last stats calculation"
+        },
+        "next_update_scheduled": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When stats will refresh"
+        },
+        "calculation_method": {
+          "type": "string",
+          "enum": ["real_time", "hourly_batch", "daily_batch"],
+          "description": "How stats are computed"
+        },
+        "data_quality_score": {
+          "type": "number",
+          "description": "Confidence in data accuracy (0-100)"
+        }
+      },
+      "description": "Metadata about stats themselves"
+    }
+  },
+  "required": ["period", "revenue", "betting_activity", "user_metrics"]
+}

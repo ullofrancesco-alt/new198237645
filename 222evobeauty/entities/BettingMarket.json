@@ -1,0 +1,241 @@
+{
+  "name": "BettingMarket",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Market question (max 120 chars for cards)"
+    },
+    "slug": {
+      "type": "string",
+      "description": "SEO-friendly URL identifier"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed market rules & context (markdown supported)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "active", "suspended", "closed", "resolving", "resolved", "cancelled"],
+      "default": "pending",
+      "description": "Market lifecycle state"
+    },
+    "option_a": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Short label (e.g., 'Grande Player')"
+        },
+        "description": {
+          "type": "string",
+          "description": "Full description with examples"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Emoji or icon identifier"
+        },
+        "color": {
+          "type": "string",
+          "description": "Brand color (hex) for UI theming"
+        }
+      },
+      "description": "Option A: Big Players (Tesla, Unitree, etc.)"
+    },
+    "option_b": {
+      "type": "object",
+      "properties": {
+        "label": {"type": "string"},
+        "description": {"type": "string"},
+        "icon": {"type": "string"},
+        "color": {"type": "string"}
+      },
+      "description": "Option B: Community/DIY solutions"
+    },
+    "opens_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Market opening timestamp (ISO 8601)"
+    },
+    "closes_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Betting deadline (countdown-friendly)"
+    },
+    "resolves_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Expected resolution time"
+    },
+    "resolved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Actual resolution timestamp"
+    },
+    "odds": {
+      "type": "object",
+      "properties": {
+        "fixed_multiplier": {
+          "type": "number",
+          "default": 1.99,
+          "description": "Fixed odds multiplier (Betfair style)"
+        },
+        "option_a_implied_probability": {
+          "type": "number",
+          "description": "Calculated probability % based on pool"
+        },
+        "option_b_implied_probability": {
+          "type": "number",
+          "description": "Calculated probability % based on pool"
+        }
+      },
+      "description": "Market odds & probabilities"
+    },
+    "liquidity": {
+      "type": "object",
+      "properties": {
+        "total_back_a": {
+          "type": "number",
+          "default": 0,
+          "description": "$BOT backing Option A"
+        },
+        "total_lay_a": {
+          "type": "number",
+          "default": 0,
+          "description": "$BOT laying against Option A"
+        },
+        "total_back_b": {
+          "type": "number",
+          "default": 0,
+          "description": "$BOT backing Option B"
+        },
+        "total_lay_b": {
+          "type": "number",
+          "default": 0,
+          "description": "$BOT laying against Option B"
+        },
+        "total_volume": {
+          "type": "number",
+          "default": 0,
+          "description": "Total $BOT in market"
+        },
+        "unique_bettors": {
+          "type": "integer",
+          "default": 0,
+          "description": "Number of unique participants"
+        }
+      },
+      "description": "Market liquidity & volume metrics"
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "winning_option": {
+          "type": "string",
+          "enum": ["A", "B", "draw", "cancelled"],
+          "description": "Final outcome"
+        },
+        "resolution_method": {
+          "type": "string",
+          "enum": ["ai_automated", "admin_manual", "community_vote", "oracle"],
+          "description": "How outcome was determined"
+        },
+        "evidence_url": {
+          "type": "string",
+          "description": "Link to proof/highlight that resolved market"
+        },
+        "linked_highlight_id": {
+          "type": "string",
+          "description": "Winning prompt ID"
+        }
+      },
+      "description": "Resolution details & proof"
+    },
+    "fees": {
+      "type": "object",
+      "properties": {
+        "platform_fee_percentage": {
+          "type": "number",
+          "default": 5.0,
+          "description": "Platform commission %"
+        },
+        "total_fees_collected": {
+          "type": "number",
+          "default": 0,
+          "description": "Total $BOT fees from this market"
+        }
+      },
+      "description": "Fee structure & collected amounts"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": ["daily_prompt", "weekly_challenge", "special_event"],
+          "description": "Market type classification"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["beginner_friendly", "expert_analysis_required"],
+          "description": "Bet complexity"
+        },
+        "tags": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Searchable tags (e.g., 'AI', 'DIY', 'Tesla')"
+        },
+        "featured": {
+          "type": "boolean",
+          "default": false,
+          "description": "Promoted in hero section"
+        },
+        "trending_score": {
+          "type": "number",
+          "default": 0,
+          "description": "Engagement-based trending metric"
+        }
+      },
+      "description": "Discovery & classification metadata"
+    },
+    "social_proof": {
+      "type": "object",
+      "properties": {
+        "views": {
+          "type": "integer",
+          "default": 0
+        },
+        "comments_count": {
+          "type": "integer",
+          "default": 0
+        },
+        "shares": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "description": "Engagement metrics for virality"
+    },
+    "rules": {
+      "type": "object",
+      "properties": {
+        "min_bet": {
+          "type": "number",
+          "default": 1,
+          "description": "Minimum $BOT per bet"
+        },
+        "max_bet": {
+          "type": "number",
+          "description": "Maximum $BOT per bet (optional limit)"
+        },
+        "early_resolution": {
+          "type": "boolean",
+          "default": false,
+          "description": "Can resolve before closes_at if outcome obvious"
+        }
+      },
+      "description": "Market-specific betting rules"
+    }
+  },
+  "required": ["title", "option_a", "option_b", "opens_at", "closes_at"]
+}
